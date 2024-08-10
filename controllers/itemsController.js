@@ -3,9 +3,16 @@ function itemsListGet(req, res) {
   res.render("items", { title: "Items" });
 }
 
-function itemsCreateGet(req, res) {}
+function itemsCreateGet(req, res) {
+  res.render("createItem", { title: "New Item Form" });
+}
 
-function itemsCreatePost(req, res) {}
+function itemsCreatePost(req, res) {
+  //validate item form
+  //if errors - return render of createItem with errors and status 400
+  //else - add item to db
+  res.redirect("/");
+}
 
 function itemsDetailsGet(req, res) {
   const id = req.params.id;
@@ -13,9 +20,24 @@ function itemsDetailsGet(req, res) {
   res.render("items", { title: `Item ${id}`, id });
 }
 
-function itemsUpdateGet(req, res) {}
+function itemsUpdateGet(req, res) {
+  const item = {
+    id: 0,
+    name: "name",
+    description: "description",
+    manufacturer: "manufacturer",
+    categories: [],
+    price: 0,
+    quantity: 0,
+  };
+}
 
-function itemsUpdatePost(req, res) {}
+function itemsUpdatePost(req, res) {
+  //validate item form
+  //if errors - return render of updateItem with errors and status 400
+  //else - update db
+  res.redirect("/");
+}
 
 function itemsDeletePost(req, res) {}
 
