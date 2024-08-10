@@ -5,10 +5,11 @@
   </head>
   <body>
     <h1><%= title %></h1>
+    <%- include('partials/errors.ejs') %>
     <form action="/categories/create" method="POST">
       <div>
         <label for="name">Name:</label>
-        <input type="text" name="name" id="name" />
+        <input type="text" name="name" id="name" required />
       </div>
       <button type="submit">Submit</button>
     </form>

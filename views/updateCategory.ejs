@@ -5,9 +5,15 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <form action="/categories/create" method="POST">
+    <%- include('partials/errors.ejs') %>
+    <form action="/categories/<%= category.id %>/update" method="POST">
       <div>
-        <input type="text" name="name" id="name" value="<%= category.name %>" />
+        <input
+          type="text"
+          name="name"
+          id="name"
+          value="<%= category.name %>"
+          required />
       </div>
       <button type="submit">Submit</button>
     </form>

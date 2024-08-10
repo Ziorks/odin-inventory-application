@@ -5,18 +5,19 @@
   </head>
   <body>
     <h1><%= title %></h1>
+    <%- include('partials/errors.ejs') %>
     <form action="/items/create" method="POST">
       <div>
         <label for="name">Name:</label>
-        <input type="text" name="name" id="name" />
+        <input type="text" name="name" id="name" required />
       </div>
       <div>
         <label for="description">Description:</label>
-        <textarea name="description" id="description"></textarea>
+        <textarea name="description" id="description" required></textarea>
       </div>
       <div>
         <label for="manufacturer">Manufacturer:</label>
-        <select name="manufacturer" id="manufacturer">
+        <select name="manufacturer" id="manufacturer" required>
           <!-- list manufacturers from db like the following-->
           <option value="manufacturer1">Manufacturer 1</option>
         </select>
@@ -31,11 +32,11 @@
       </fieldset>
       <div>
         <label for="price">Price:</label>
-        <input type="number" name="price" id="price" />
+        <input type="number" name="price" id="price" required />
       </div>
       <div>
         <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" />
+        <input type="number" name="quantity" id="quantity" required />
       </div>
       <button type="submit">Submit</button>
     </form>

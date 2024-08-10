@@ -1,3 +1,12 @@
+const { body, validationResult } = require("express-validator");
+
+const validateCategory = [
+  body("name")
+    .trim()
+    .isAlpha()
+    .withMessage("Category must only contain letters."),
+];
+
 function categoriesListGet(req, res) {
   //get all categories from db
   res.render("categories", { title: "Categories" });
@@ -7,12 +16,21 @@ function categoriesCreateGet(req, res) {
   res.render("createCategory", { title: "New Category Form" });
 }
 
-function categoriesCreatePost(req, res) {
-  //validate category form
-  //if errors - return render of createCategory with errors and status 400
-  //else - add category to db
-  res.redirect("/");
-}
+const categoriesCreatePost = [
+  validateCategory,
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("createCategory", {
+        title: "New Category Form",
+        errors: errors.array(),
+      });
+    }
+    const { name } = req.body;
+    // add category to db
+    res.redirect("/");
+  },
+];
 
 function categoriesDetailsGet(req, res) {
   const id = req.params.id;
@@ -21,6 +39,7 @@ function categoriesDetailsGet(req, res) {
 }
 
 function categoriesUpdateGet(req, res) {
+  //get category from req.params.id and db
   const category = {
     id: 0,
     name: "name",
@@ -28,12 +47,26 @@ function categoriesUpdateGet(req, res) {
   res.render("updateCategory", { title: "Update Category Form", category });
 }
 
-function categoriesUpdatePost(req, res) {
-  //validate category form
-  //if errors - return render of updateCategory with errors and status 400
-  //else - add category to db
-  res.redirect("/");
-}
+const categoriesUpdatePost = [
+  validateCategory,
+  (req, res) => {
+    //get category from req.params.id and db
+    const category = {
+      id: 0,
+      name: "name",
+    };
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("updateCategory", {
+        title: "Update Category Form",
+        category,
+        errors: errors.array(),
+      });
+    }
+    //add category to db
+    res.redirect("/");
+  },
+];
 
 function categoriesDeletePost(req, res) {}
 
