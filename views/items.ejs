@@ -9,6 +9,11 @@
     <h2><%= id %></h2>
     <% } else { %>
     <h2>Items List</h2>
+    <ul>
+      <% items.forEach(item => { %>
+      <li><%= item.item %></li>
+      <% }) %>
+    </ul>
     <% } %>
     <a href="/items/create">Add a new category</a>
   </body>

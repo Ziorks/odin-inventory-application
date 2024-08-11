@@ -1,8 +1,12 @@
 const { body, validationResult } = require("express-validator");
+const db = require("../db/queries");
 
 const validateItem = [
   //probably add better validation here
-  body("name").trim(),
+  body("name")
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage("Name must be less than 255 characters."),
   body("description").trim(),
   body("manufacturer"),
   body("categories"),
@@ -10,15 +14,13 @@ const validateItem = [
     .trim()
     .isFloat({ gt: 0 })
     .withMessage("Price must be a number greater than 0."),
-  body("quantity")
-    .trim()
-    .isNumeric()
-    .withMessage("Quantity must be an integer."),
+  body("quantity").trim().isInt().withMessage("Quantity must be an integer."),
 ];
 
-function itemsListGet(req, res) {
+async function itemsListGet(req, res) {
   //get all items for a given category OR all items if no category
-  res.render("items", { title: "Items" });
+  const items = await db.getAllItems();
+  res.render("items", { title: "Items", items });
 }
 
 function itemsCreateGet(req, res) {

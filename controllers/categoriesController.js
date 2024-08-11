@@ -1,15 +1,18 @@
 const { body, validationResult } = require("express-validator");
+const db = require("../db/queries");
 
 const validateCategory = [
   body("name")
     .trim()
     .isAlpha()
-    .withMessage("Category must only contain letters."),
+    .withMessage("Category must only contain letters.")
+    .isLength({ max: 255 })
+    .withMessage("Category must be less than 255 characters."),
 ];
 
-function categoriesListGet(req, res) {
-  //get all categories from db
-  res.render("categories", { title: "Categories" });
+async function categoriesListGet(req, res) {
+  const categories = await db.getAllCategories();
+  res.render("categories", { title: "Categories", categories });
 }
 
 function categoriesCreateGet(req, res) {
