@@ -22,13 +22,19 @@ async function itemsListGet(req, res) {
   res.render("listItems", { title: "Items", items });
 }
 
-function itemsCreateGet(req, res) {
-  res.render("createItem", { title: "New Item Form" });
+async function itemsCreateGet(req, res) {
+  const manufacturers = await db.getAllManufacturers();
+  const categories = await db.getAllCategories();
+  res.render("createItem", {
+    title: "New Item Form",
+    manufacturers,
+    categories,
+  });
 }
 
 const itemsCreatePost = [
   validateItem,
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("createItem", {
@@ -36,7 +42,21 @@ const itemsCreatePost = [
         errors: errors.array(),
       });
     }
-    //add item to db
+    const { name, description, manufacturer, price, quantity } = req.body;
+    const categoryIds = [];
+    Object.keys(req.body).forEach((key) => {
+      if (key.startsWith("category")) {
+        categoryIds.push(key.split("_")[1]);
+      }
+    });
+    await db.createItem({
+      name,
+      description,
+      manufacturer,
+      price,
+      quantity,
+      categoryIds,
+    });
     res.redirect("/");
   },
 ];

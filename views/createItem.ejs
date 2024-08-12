@@ -1,46 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link rel="stylesheet" href="/style.css" />
-    <title><%= title %></title>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <%- include('partials/errors.ejs') %>
-    <form action="/items/create" method="POST">
+
+<head>
+  <link rel="stylesheet" href="/style.css" />
+  <title><%= title %></title>
+</head>
+
+<body>
+  <h1><%= title %></h1>
+  <%- include('partials/errors.ejs') %>
+  <form action="/items/create" method="POST">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" required />
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" required></textarea>
+    </div>
+    <div>
+      <label for="manufacturer">Manufacturer:</label>
+      <select name="manufacturer" id="manufacturer" required>
+        <% manufacturers.forEach( manufacturer => { %>
+        <option value="<%= manufacturer.id %>">
+          <%= manufacturer.manufacturer %>
+        </option>
+        <% }) %>
+      </select>
+    </div>
+    <fieldset>
+      <legend>Categories:</legend>
+      <% categories.forEach( category => { %>
       <div>
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" required />
+        <input type="checkbox" name="category_<%= category.id %>" id="category_<%= category.id %>" />
+        <label for="category_<%= category.id %>"><%= category.category %></label>
       </div>
-      <div>
-        <label for="description">Description:</label>
-        <textarea name="description" id="description" required></textarea>
-      </div>
-      <div>
-        <label for="manufacturer">Manufacturer:</label>
-        <select name="manufacturer" id="manufacturer" required>
-          <!-- list manufacturers from db like the following-->
-          <option value="manufacturer1">Manufacturer 1</option>
-        </select>
-      </div>
-      <fieldset>
-        <legend>Categories:</legend>
-        <!-- list all categories from db like the following -->
-        <div>
-          <input type="checkbox" name="category1" id="category1" />
-          <label for="category1">Category 1</label>
-        </div>
-      </fieldset>
-      <div>
-        <label for="price">Price:</label>
-        <input type="number" name="price" id="price" required />
-      </div>
-      <div>
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" required />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-    <a href="/">Back to home</a>
-  </body>
+      <% }) %>
+    </fieldset>
+    <div>
+      <label for="price">Price:</label>
+      <input type="number" name="price" id="price" required />
+    </div>
+    <div>
+      <label for="quantity">Quantity:</label>
+      <input type="number" name="quantity" id="quantity" required />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <a href="/">Back to home</a>
+</body>
+
 </html>

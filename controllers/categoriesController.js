@@ -21,7 +21,7 @@ function categoriesCreateGet(req, res) {
 
 const categoriesCreatePost = [
   validateCategory,
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("createCategory", {
@@ -30,7 +30,7 @@ const categoriesCreatePost = [
       });
     }
     const { name } = req.body;
-    // add category to db
+    await db.createCategory(name);
     res.redirect("/");
   },
 ];

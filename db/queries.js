@@ -1,5 +1,30 @@
 const pool = require("./pool");
 
+async function createCategory(name) {
+  await pool.query("INSERT INTO categories (category) VALUES ($1)", [name]);
+}
+
+async function createItem({
+  name,
+  description,
+  manufacturer,
+  price,
+  quantity,
+  categoryIds,
+}) {
+  const { rows } = await pool.query(
+    "INSERT INTO items (item, description, manufacturer_id, price, quantity) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+    [name, description, manufacturer, price, quantity]
+  );
+  const itemId = rows[0].id;
+  categoryIds.forEach(async (categoryId) => {
+    await pool.query(
+      "INSERT INTO item_categories (item_id, category_id) VALUES ($1, $2)",
+      [itemId, categoryId]
+    );
+  });
+}
+
 async function getAllCategories() {
   const { rows } = await pool.query("SELECT * FROM categories");
   return rows;
@@ -85,6 +110,8 @@ async function updateItemCategories(itemId, categoryIds) {
 }
 
 module.exports = {
+  createCategory,
+  createItem,
   getAllCategories,
   getAllManufacturers,
   getAllItems,
