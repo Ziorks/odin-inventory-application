@@ -25,6 +25,12 @@ async function createItem({
   });
 }
 
+async function createManufacturer(name) {
+  await pool.query("INSERT INTO manufacturers (manufacturer) VALUES ($1)", [
+    name,
+  ]);
+}
+
 async function getAllCategories() {
   const { rows } = await pool.query("SELECT * FROM categories");
   return rows;
@@ -124,6 +130,7 @@ async function deleteItem(itemId) {
 module.exports = {
   createCategory,
   createItem,
+  createManufacturer,
   getAllCategories,
   getAllManufacturers,
   getAllItems,
