@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link rel="stylesheet" href="/style.css" />
-    <title><%= title %></title>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <%- include('partials/errors.ejs') %>
-    <form action="/categories/<%= category.id %>/update" method="POST">
-      <div>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value="<%= category.category %>"
-          required />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-    <a href="/">Back to home</a>
-  </body>
+
+<head>
+  <link rel="stylesheet" href="/style.css" />
+  <title><%= title %></title>
+</head>
+
+<body>
+  <%- include("partials/header.ejs") %>
+  <h2><%= title %></h2>
+  <%- include('partials/errors.ejs') %>
+  <form action="/categories/<%= category.id %>/update" method="POST">
+    <div>
+      <input type="text" name="name" id="name" value="<%= category.category %>" required />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <a href="/">Back to home</a>
+</body>
+
 </html>
