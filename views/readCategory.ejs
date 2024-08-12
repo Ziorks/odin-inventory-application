@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="/style.css" />
+    <title><%= category.category %></title>
+  </head>
+  <body>
+    <h1><%= category.category %></h1>
+    <ul>
+      <% items.forEach(item => { %>
+      <li>
+        <a href="/items/<%= item.id %>"><%= item.item %></a>
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

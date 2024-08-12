@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="/style.css" />
     <title><%= title %></title>
   </head>
   <body>
     <h1><%= title %></h1>
-    <% if(locals.id) { %>
-    <h2><%= id %></h2>
-    <% } else { %>
-    <h2>Categories List</h2>
     <ul>
       <% categories.forEach(category => { %>
-      <li><%= category.category %></li>
+      <li>
+        <a href="/categories/<%= category.id %>"><%= category.category %></a>
+      </li>
       <% }) %>
     </ul>
-    <% } %>
     <a href="/categories/create">Add a new category</a>
   </body>
 </html>

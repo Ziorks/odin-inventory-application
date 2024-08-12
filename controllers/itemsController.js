@@ -18,9 +18,9 @@ const validateItem = [
 ];
 
 async function itemsListGet(req, res) {
-  //get all items for a given category OR all items if no category
+  //get all items if
   const items = await db.getAllItems();
-  res.render("items", { title: "Items", items });
+  res.render("listItems", { title: "Items", items });
 }
 
 function itemsCreateGet(req, res) {
@@ -42,10 +42,12 @@ const itemsCreatePost = [
   },
 ];
 
-function itemsDetailsGet(req, res) {
+async function itemsDetailsGet(req, res) {
   const id = req.params.id;
-  //get item info from db and pass it to view
-  res.render("items", { title: `Item ${id}`, id });
+  //consider combining this into one db query
+  const item = await db.getItemFromId(id);
+  const manufacturer = await db.getManufacturerFromId(item.manufacturer_id);
+  res.render("readItem", { item, manufacturer });
 }
 
 function itemsUpdateGet(req, res) {

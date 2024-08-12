@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS item_categories (
   CONSTRAINT item_categories_pkey PRIMARY KEY (item_id, category_id)
 );
 
-INSERT INTO item_categories (item_id, category_id) VALUES (1, 2), (2, 1);
+INSERT INTO item_categories (item_id, category_id) VALUES (1, 1), (2, 2);
 `;
 
 async function main() {

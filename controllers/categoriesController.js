@@ -12,7 +12,7 @@ const validateCategory = [
 
 async function categoriesListGet(req, res) {
   const categories = await db.getAllCategories();
-  res.render("categories", { title: "Categories", categories });
+  res.render("listCategories", { title: "All Categories", categories });
 }
 
 function categoriesCreateGet(req, res) {
@@ -35,10 +35,12 @@ const categoriesCreatePost = [
   },
 ];
 
-function categoriesDetailsGet(req, res) {
+async function categoriesDetailsGet(req, res) {
   const id = req.params.id;
-  //get category info from db and pass it to view
-  res.render("categories", { title: `Category ${id}`, id });
+  //consider combining this into one db query
+  const category = await db.getCategoryFromId(id);
+  const items = await db.getItemsInCategory(id);
+  res.render("readCategory", { category, items });
 }
 
 function categoriesUpdateGet(req, res) {

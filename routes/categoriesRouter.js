@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const categoriesController = require("../controllers/categoriesController");
-const itemsRouter = require("./itemsRouter");
 
 const router = Router();
 
@@ -19,7 +18,5 @@ router
   .post(categoriesController.categoriesUpdatePost); //update category details
 
 router.post("/:id/delete", categoriesController.categoriesDeletePost); //delete a category
-
-router.use("/:id/items", itemsRouter); //show all items for a given category TODO: Pass category id to items router
 
 module.exports = router;
