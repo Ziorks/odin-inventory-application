@@ -43,32 +43,27 @@ async function categoriesDetailsGet(req, res) {
   res.render("readCategory", { category, items });
 }
 
-function categoriesUpdateGet(req, res) {
-  //get category from req.params.id and db
-  const category = {
-    id: 0,
-    name: "name",
-  };
+async function categoriesUpdateGet(req, res) {
+  const id = req.params.id;
+  const category = await db.getCategoryFromId(id);
   res.render("updateCategory", { title: "Update Category Form", category });
 }
 
 const categoriesUpdatePost = [
   validateCategory,
-  (req, res) => {
-    //get category from req.params.id and db
-    const category = {
-      id: 0,
-      name: "name",
-    };
+  async (req, res) => {
+    const id = req.params.id;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      const category = await db.getCategoryFromId(id);
       return res.status(400).render("updateCategory", {
         title: "Update Category Form",
         category,
         errors: errors.array(),
       });
     }
-    //add category to db
+    const { name } = req.body;
+    await db.updateCategory({ id, name });
     res.redirect("/");
   },
 ];

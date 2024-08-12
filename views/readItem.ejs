@@ -10,5 +10,7 @@
     <p>Manufacturer: <%= manufacturer.manufacturer %></p>
     <p>Price: <%= item.price %></p>
     <p>Quantity In Stock: <%= item.quantity %></p>
+    <a href="/items/<%= item.id %>/update">Edit</a>
+    <a href="/items/<%= item.id %>/delete">Delete</a>
   </body>
 </html>

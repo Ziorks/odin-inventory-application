@@ -18,7 +18,6 @@ const validateItem = [
 ];
 
 async function itemsListGet(req, res) {
-  //get all items if
   const items = await db.getAllItems();
   res.render("listItems", { title: "Items", items });
 }
@@ -50,42 +49,57 @@ async function itemsDetailsGet(req, res) {
   res.render("readItem", { item, manufacturer });
 }
 
-function itemsUpdateGet(req, res) {
-  //get item from req.params.id and db
-  const item = {
-    id: 0,
-    name: "name",
-    description: "description",
-    manufacturer: "manufacturer",
-    categories: [],
-    price: 0,
-    quantity: 0,
-  };
-  res.render("updateItem", { title: "Update Item Form", item });
+async function itemsUpdateGet(req, res) {
+  const id = req.params.id;
+  const item = await db.getItemFromId(id);
+  const manufacturers = await db.getAllManufacturers();
+  const categories = await db.getAllCategories();
+  const item_categories = await db.getCategoriesForItem(id);
+  res.render("updateItem", {
+    title: "Update Item Form",
+    item,
+    manufacturers,
+    categories,
+    item_categories,
+  });
 }
 
 const itemsUpdatePost = [
   validateItem,
-  (req, res) => {
-    //get item from req.params.id and db
-    const item = {
-      id: 0,
-      name: "name",
-      description: "description",
-      manufacturer: "manufacturer",
-      categories: [],
-      price: 0,
-      quantity: 0,
-    };
+  async (req, res) => {
+    const id = req.params.id;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      const item = await db.getItemFromId(id);
+      const manufacturers = await db.getAllManufacturers();
+      const categories = await db.getAllCategories();
+      const item_categories = await db.getCategoriesForItem(id);
       return res.status(400).render("updateItem", {
         title: "Update Item Form",
         item,
+        manufacturers,
+        categories,
+        item_categories,
         errors: errors.array(),
       });
     }
-    //update db
+    const { name, description, manufacturer, price, quantity } = req.body;
+    await db.updateItem({
+      id,
+      name,
+      description,
+      manufacturer,
+      price,
+      quantity,
+    });
+
+    const categoryIds = [];
+    Object.keys(req.body).forEach((key) => {
+      if (key.startsWith("category")) {
+        categoryIds.push(key.split("_")[1]);
+      }
+    });
+    await db.updateItemCategories(id, categoryIds);
     res.redirect("/");
   },
 ];
