@@ -17,6 +17,9 @@ router
   .get(categoriesController.categoriesUpdateGet) //show category update form
   .post(categoriesController.categoriesUpdatePost); //update category details
 
-router.post("/:id/delete", categoriesController.categoriesDeletePost); //delete a category
+router
+  .route("/:id/delete")
+  .get(categoriesController.categoriesDeleteGet) //show category delete form
+  .post(categoriesController.categoriesDeletePost); //delete a category
 
 module.exports = router;

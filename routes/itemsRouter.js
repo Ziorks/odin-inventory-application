@@ -17,6 +17,9 @@ router
   .get(itemsController.itemsUpdateGet) //show item update form
   .post(itemsController.itemsUpdatePost); //update item details
 
-router.post("/:id/delete", itemsController.itemsDeletePost); //delete an item
+router
+  .route("/:id/delete")
+  .get(itemsController.itemsDeleteGet) //show item delete form
+  .post(itemsController.itemsDeletePost); //delete an item
 
 module.exports = router;

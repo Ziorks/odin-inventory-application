@@ -17,6 +17,12 @@ const validateItem = [
   body("quantity").trim().isInt().withMessage("Quantity must be an integer."),
 ];
 
+const validateDeletePassword = [
+  body("password")
+    .equals(process.env.DELETE_PASSWORD)
+    .withMessage("Incorrect password."),
+];
+
 async function itemsListGet(req, res) {
   const items = await db.getAllItems();
   res.render("listItems", { title: "Items", items });
@@ -125,11 +131,29 @@ const itemsUpdatePost = [
   },
 ];
 
-async function itemsDeletePost(req, res) {
+async function itemsDeleteGet(req, res) {
   const itemId = req.params.id;
-  await db.deleteItem(itemId);
-  res.redirect("/items");
+  const item = await db.getItemFromId(itemId);
+  res.render("deleteItem", { title: "Delete Item Confirmation", item });
 }
+
+const itemsDeletePost = [
+  validateDeletePassword,
+  async (req, res) => {
+    const itemId = req.params.id;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const item = await db.getItemFromId(itemId);
+      return res.status(400).render("deleteItem", {
+        title: "Delete Item Confirmation",
+        item,
+        errors: errors.array(),
+      });
+    }
+    await db.deleteItem(itemId);
+    res.redirect("/items");
+  },
+];
 
 module.exports = {
   itemsListGet,
@@ -138,5 +162,6 @@ module.exports = {
   itemsDetailsGet,
   itemsUpdateGet,
   itemsUpdatePost,
+  itemsDeleteGet,
   itemsDeletePost,
 };

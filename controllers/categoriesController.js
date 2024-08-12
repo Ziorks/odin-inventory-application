@@ -10,6 +10,12 @@ const validateCategory = [
     .withMessage("Category must be less than 255 characters."),
 ];
 
+const validateDeletePassword = [
+  body("password")
+    .equals(process.env.DELETE_PASSWORD)
+    .withMessage("Incorrect password."),
+];
+
 async function categoriesListGet(req, res) {
   const categories = await db.getAllCategories();
   res.render("listCategories", { title: "All Categories", categories });
@@ -68,11 +74,32 @@ const categoriesUpdatePost = [
   },
 ];
 
-async function categoriesDeletePost(req, res) {
+async function categoriesDeleteGet(req, res) {
   const categoryId = req.params.id;
-  await db.deleteCategory(categoryId);
-  res.redirect("/categories");
+  const category = await db.getCategoryFromId(categoryId);
+  res.render("deleteCategory", {
+    title: "Delete Category Confirmation",
+    category,
+  });
 }
+
+const categoriesDeletePost = [
+  validateDeletePassword,
+  async (req, res) => {
+    const categoryId = req.params.id;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const category = await db.getCategoryFromId(categoryId);
+      return res.status(400).render("deleteCategory", {
+        title: "Delete Category Confirmation",
+        category,
+        errors: errors.array(),
+      });
+    }
+    await db.deleteCategory(categoryId);
+    res.redirect("/categories");
+  },
+];
 
 module.exports = {
   categoriesListGet,
@@ -81,5 +108,6 @@ module.exports = {
   categoriesDetailsGet,
   categoriesUpdateGet,
   categoriesUpdatePost,
+  categoriesDeleteGet,
   categoriesDeletePost,
 };
