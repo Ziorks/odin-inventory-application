@@ -22,7 +22,7 @@
     </div>
     <div>
       <label for="manufacturer">Manufacturer:</label>
-      <select name="manufacturer" id="manufacturer" value="<%= item.manufacturer_id %>" required>
+      <select name="manufacturer" id="manufacturer" required>
         <% manufacturers.forEach( manufacturer => { %>
         <option value="<%= manufacturer.id %>" <%= (manufacturer.id == item.manufacturer_id) ? "selected" : ""; %>>
           <%= manufacturer.manufacturer %>
