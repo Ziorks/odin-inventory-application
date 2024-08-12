@@ -11,6 +11,10 @@
   <h2><%= item.item %></h2>
   <p>Description: <%= item.description %></p>
   <p>Manufacturer: <%= manufacturer.manufacturer %></p>
+  <p>Categories: <% categories.forEach(category=>{ %>
+    <a href="/categories/<%= category.id %>"><%= category.category %></a>
+    <% }) %>
+  </p>
   <p>Price: <%= item.price %></p>
   <p>Quantity In Stock: <%= item.quantity %></p>
   <a href="/items/<%= item.id %>/update">Edit</a>

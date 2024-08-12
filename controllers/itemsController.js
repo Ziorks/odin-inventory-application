@@ -66,7 +66,8 @@ async function itemsDetailsGet(req, res) {
   //consider combining this into one db query
   const item = await db.getItemFromId(id);
   const manufacturer = await db.getManufacturerFromId(item.manufacturer_id);
-  res.render("readItem", { item, manufacturer });
+  const categories = await db.getCategoriesForItem(id);
+  res.render("readItem", { item, manufacturer, categories });
 }
 
 async function itemsUpdateGet(req, res) {
