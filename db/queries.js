@@ -109,6 +109,18 @@ async function updateItemCategories(itemId, categoryIds) {
   });
 }
 
+async function deleteCategory(categoryId) {
+  await pool.query("DELETE FROM item_categories WHERE category_id = $1", [
+    categoryId,
+  ]);
+  await pool.query("DELETE FROM categories WHERE id = $1", [categoryId]);
+}
+
+async function deleteItem(itemId) {
+  await pool.query("DELETE FROM item_categories WHERE item_id = $1", [itemId]);
+  await pool.query("DELETE FROM items WHERE id = $1", [itemId]);
+}
+
 module.exports = {
   createCategory,
   createItem,
@@ -123,4 +135,6 @@ module.exports = {
   updateCategory,
   updateItem,
   updateItemCategories,
+  deleteCategory,
+  deleteItem,
 };

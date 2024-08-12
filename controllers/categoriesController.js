@@ -31,7 +31,7 @@ const categoriesCreatePost = [
     }
     const { name } = req.body;
     await db.createCategory(name);
-    res.redirect("/");
+    res.redirect("/categories");
   },
 ];
 
@@ -64,11 +64,15 @@ const categoriesUpdatePost = [
     }
     const { name } = req.body;
     await db.updateCategory({ id, name });
-    res.redirect("/");
+    res.redirect("/categories");
   },
 ];
 
-function categoriesDeletePost(req, res) {}
+async function categoriesDeletePost(req, res) {
+  const categoryId = req.params.id;
+  await db.deleteCategory(categoryId);
+  res.redirect("/categories");
+}
 
 module.exports = {
   categoriesListGet,

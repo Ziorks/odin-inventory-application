@@ -57,7 +57,7 @@ const itemsCreatePost = [
       quantity,
       categoryIds,
     });
-    res.redirect("/");
+    res.redirect("/items");
   },
 ];
 
@@ -120,11 +120,15 @@ const itemsUpdatePost = [
       }
     });
     await db.updateItemCategories(id, categoryIds);
-    res.redirect("/");
+    res.redirect("/items");
   },
 ];
 
-function itemsDeletePost(req, res) {}
+async function itemsDeletePost(req, res) {
+  const itemId = req.params.id;
+  await db.deleteItem(itemId);
+  res.redirect("/items");
+}
 
 module.exports = {
   itemsListGet,
