@@ -17,5 +17,13 @@ app.use("/categories", categoriesRouter);
 app.use("/items", itemsRouter);
 app.use("/manufacturers", manufacturersRouter);
 
+app.get("*", (req, res) => {
+  res.status(404).render("404", { title: "Page Not Found" });
+});
+
+app.use((err, req, res, next) => {
+  res.status(500).send(err);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
