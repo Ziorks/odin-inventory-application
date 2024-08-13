@@ -1,8 +1,95 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: #333;
   color: #fff;
 }
 
 a {
-  color: #fff;
+  color: #4dad52;
+}
+
+header {
+  margin: 50px auto;
+  width: max-content;
+}
+
+header > h1 {
+  margin-bottom: 25px;
+}
+
+header > nav > ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+main {
+  margin: 30px;
+}
+
+main > h2,
+main > h3 {
+  margin: 15px 0;
+}
+
+main > a {
+  display: block;
+  margin: 15px 0;
+}
+
+main > ul {
+  list-style: none;
+}
+
+main > ul > li {
+  margin: 3px 0;
+}
+
+form {
+  border: 1px solid rgba(255, 255, 255, 0.616);
+  border-radius: 10px;
+  padding: 10px;
+  width: max-content;
+}
+
+form > div {
+  margin: 10px 0;
+}
+
+form > div > label {
+  display: inline-block;
+  text-align: right;
+  width: 100px;
+}
+
+form > div > input,
+form > div > textarea,
+form > div > select {
+  width: 150px;
+}
+
+form > div > textarea {
+  resize: vertical;
+}
+
+form > fieldset {
+  max-width: 250px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+}
+
+form > fieldset > div {
+  margin: 5px;
+}
+
+form > button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5px;
 }

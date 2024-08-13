@@ -8,15 +8,17 @@
 
 <body>
   <%- include("partials/header.ejs") %>
-  <h2><%= title %></h2>
-  <ul>
-    <% categories.forEach(category => { %>
-    <li>
-      <a href="/categories/<%= category.id %>"><%= category.category %></a>
-    </li>
-    <% }) %>
-  </ul>
-  <a href="/categories/create">Add a new category</a>
+  <main>
+    <h2><%= title %></h2>
+    <a href="/categories/create">Add a new category</a>
+    <ul>
+      <% categories.forEach(category => { %>
+      <li>
+        <a href="/categories/<%= category.id %>"><%= category.category %></a>
+      </li>
+      <% }) %>
+    </ul>
+  </main>
 </body>
 
 </html>

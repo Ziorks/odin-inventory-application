@@ -8,17 +8,21 @@
 
 <body>
   <%- include("partials/header.ejs") %>
-  <h2>Category: <%= category.category %></h2>
-  <a href="/categories/<%= category.id %>/update">Edit</a>
-  <a href="/categories/<%= category.id %>/delete">Delete</a>
-  <h3>Items</h3>
-  <ul>
-    <% items.forEach(item => { %>
-    <li>
-      <a href="/items/<%= item.id %>"><%= item.item %></a>
-    </li>
-    <% }) %>
-  </ul>
+  <main>
+    <h2>Category: <%= category.category %></h2>
+    <div>
+      <a href="/categories/<%= category.id %>/update">Edit</a>
+      <a href="/categories/<%= category.id %>/delete">Delete</a>
+    </div>
+    <h3>Items</h3>
+    <ul>
+      <% items.forEach(item => { %>
+      <li>
+        <a href="/items/<%= item.id %>"><%= item.item %></a>
+      </li>
+      <% }) %>
+    </ul>
+  </main>
 </body>
 
 </html>

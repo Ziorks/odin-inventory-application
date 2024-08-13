@@ -8,15 +8,17 @@
 
 <body>
   <%- include("partials/header.ejs") %>
-  <h2><%= title %></h2>
-  <%- include('partials/errors.ejs') %>
-  <form action="/categories/<%= category.id %>/update" method="POST">
-    <div>
-      <input type="text" name="name" id="name" value="<%= category.category %>" required />
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-  <a href="/">Back to home</a>
+  <main>
+    <h2><%= title %></h2>
+    <%- include('partials/errors.ejs') %>
+    <form action="/categories/<%= category.id %>/update" method="POST">
+      <div>
+        <input type="text" name="name" id="name" value="<%= category.category %>" required />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+    <a href="/">Back to home</a>
+  </main>
 </body>
 
 </html>

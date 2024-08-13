@@ -8,18 +8,20 @@
 
 <body>
   <%- include("partials/header.ejs") %>
-  <h2><%= title %></h2>
-  <%- include('partials/errors.ejs') %>
-  <form action="/items/<%= item.id %>/delete" method="POST">
-    <div>
-      <p>Enter password to delete the '<%= item.item %>' item forever.</p>
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password">
-    </div>
-    <button type="submit">Submit</button>
-  </form>
+  <main>
+    <h2><%= title %></h2>
+    <%- include('partials/errors.ejs') %>
+    <form action="/items/<%= item.id %>/delete" method="POST">
+      <div>
+        <p>Enter password to delete the '<%= item.item %>' item forever.</p>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
 </body>
 
 </html>
