@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS items (
 INSERT INTO items (item, description, manufacturer_id, price, quantity)
   VALUES ('X-Mid 1P', '1 person trekking pole tent', 2, 296, 14),
          ('Exos', '60 Liter Lightweight backpack', 5, 165, 6),
-         ('NeoAir XLite NXT', 'Ultra-light insultated sleeping pad', 6, 200, 8),
-         ('Tensor', 'Ultra-light insultated sleeping pad', 1, 180, 3);
+         ('NeoAir XLite NXT', 'Ultra-light insulated sleeping pad', 6, 200, 8),
+         ('Tensor', 'Ultra-light insulated sleeping pad', 1, 180, 3);
 
 CREATE TABLE IF NOT EXISTS item_categories (
   item_id INTEGER REFERENCES items(id),
