@@ -6,14 +6,23 @@ CREATE TABLE IF NOT EXISTS categories (
   category VARCHAR ( 255 ) NOT NULL
 );
 
-INSERT INTO categories (category) VALUES ('Tents'), ('Backpacks');
+INSERT INTO categories (category)
+  VALUES ('Tents'),
+         ('Backpacks'),
+         ('Sleeping Pads');
 
 CREATE TABLE IF NOT EXISTS manufacturers (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   manufacturer VARCHAR ( 255 ) NOT NULL
 );
 
-INSERT INTO manufacturers (manufacturer) VALUES ('Nemo'), ('Durston'), ('Big Agnes'), ('MSR'), ('Osprey');
+INSERT INTO manufacturers (manufacturer)
+  VALUES ('Nemo'),
+         ('Durston'),
+         ('Big Agnes'),
+         ('MSR'),
+         ('Osprey'),
+         ('Therm-a-Rest');
 
 CREATE TABLE IF NOT EXISTS items (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -24,7 +33,11 @@ CREATE TABLE IF NOT EXISTS items (
   quantity INTEGER NOT NULL
 );
 
-INSERT INTO items (item, description, manufacturer_id, price, quantity) VALUES ('X-Mid 1P', '1 person trekking pole tent', 2, 295.99, 14), ('Exos', '60 Liter Lightweight backpack', 5, 165.98, 6);
+INSERT INTO items (item, description, manufacturer_id, price, quantity)
+  VALUES ('X-Mid 1P', '1 person trekking pole tent', 2, 296, 14),
+         ('Exos', '60 Liter Lightweight backpack', 5, 165, 6),
+         ('NeoAir XLite NXT', 'Ultra-light insultated sleeping pad', 6, 200, 8),
+         ('Tensor', 'Ultra-light insultated sleeping pad', 1, 180, 3);
 
 CREATE TABLE IF NOT EXISTS item_categories (
   item_id INTEGER REFERENCES items(id),
@@ -32,7 +45,11 @@ CREATE TABLE IF NOT EXISTS item_categories (
   CONSTRAINT item_categories_pkey PRIMARY KEY (item_id, category_id)
 );
 
-INSERT INTO item_categories (item_id, category_id) VALUES (1, 1), (2, 2);
+INSERT INTO item_categories (item_id, category_id)
+  VALUES (1, 1),
+         (2, 2),
+         (3, 3),
+         (4, 3);
 `;
 
 async function main() {
@@ -46,4 +63,6 @@ async function main() {
   console.log("done");
 }
 
-main();
+if (process.env.POPULATE === "true") {
+  main();
+}
