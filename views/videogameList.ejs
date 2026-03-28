@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <%- include('partials/header.ejs') %>
+  <h2><%= title %></h2>
+  <a href="/videogames/create" class="toplink">Create a new videogame</a>
+  <% if (videogames.length > 0) { %>
+  <ul>
+    <% videogames.forEach(videogame=>{ %>
+    <li><a href="/videogames/<%= videogame.videogame_id %>"><%= videogame.title %></a></li>
+    <% }) %>
+  </ul>
+  <% } else { %>
+  <p>There are no videogames.</p>
+  <% } %>
+</body>
+
+</html>

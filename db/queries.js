@@ -1,147 +1,216 @@
 const pool = require("./pool");
 
-async function createCategory(name) {
-  await pool.query("INSERT INTO categories (category) VALUES ($1)", [name]);
+async function getAllVideogames() {
+  const { rows } = await pool.query(`SELECT * FROM videogame;`);
+  return rows;
 }
 
-async function createItem({
-  name,
+async function getAllDevelopers() {
+  const { rows } = await pool.query(`SELECT * FROM developer;`);
+  return rows;
+}
+
+async function getAllPublishers() {
+  const { rows } = await pool.query(`SELECT * FROM publisher;`);
+  return rows;
+}
+
+async function getAllGenres() {
+  const { rows } = await pool.query(`SELECT * FROM genre;`);
+  return rows;
+}
+
+async function getVideogame(videogameId) {
+  const { rows } = await pool.query(
+    `
+    SELECT videogame.*, TO_CHAR(videogame.release_date, 'Mon DD, YYYY') AS release_date, developer, publisher FROM videogame
+    JOIN developer ON videogame.developer_id = developer.developer_id
+    JOIN publisher ON videogame.publisher_id = publisher.publisher_id
+    WHERE videogame.videogame_id = $1;
+    `,
+    [videogameId]
+  );
+  return rows[0];
+}
+
+async function getGenre(genreId) {
+  const { rows } = await pool.query(
+    `
+    SELECT * FROM genre
+    WHERE genre_id = $1;
+    `,
+    [genreId]
+  );
+  return rows[0];
+}
+
+async function getVideogameGenres(videogameId) {
+  const { rows } = await pool.query(
+    `
+    SELECT genre.* FROM videogame_genre
+    JOIN genre ON videogame_genre.genre_id = genre.genre_id
+    WHERE videogame_genre.videogame_id = $1;
+    `,
+    [videogameId]
+  );
+
+  return rows;
+}
+
+async function getGenreVideogames(genreId) {
+  const { rows } = await pool.query(
+    `
+    SELECT videogame.videogame_id, videogame.title FROM videogame_genre
+    JOIN videogame ON videogame_genre.videogame_id = videogame.videogame_id
+    WHERE videogame_genre.genre_id = $1;
+    `,
+    [genreId]
+  );
+  return rows;
+}
+
+getGenreVideogames(1);
+
+async function createVideogame({
+  title,
   description,
-  manufacturer,
-  price,
+  releaseDate,
   quantity,
-  categoryIds,
+  developerId,
+  publisherId,
+  genreIds,
 }) {
   const { rows } = await pool.query(
-    "INSERT INTO items (item, description, manufacturer_id, price, quantity) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-    [name, description, manufacturer, price, quantity]
+    `
+    INSERT INTO videogame (title, description, release_date, quantity, developer_id, publisher_id)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)
+    RETURNING videogame_id;
+    `,
+    [title, description, releaseDate, quantity, developerId, publisherId]
   );
-  const itemId = rows[0].id;
-  categoryIds.forEach(async (categoryId) => {
+  const videogameId = rows[0].videogame_id;
+  genreIds.forEach(async (genreId) => {
     await pool.query(
-      "INSERT INTO item_categories (item_id, category_id) VALUES ($1, $2)",
-      [itemId, categoryId]
+      `
+      INSERT INTO videogame_genre (videogame_id, genre_id)
+      VALUES
+        ($1, $2);
+      `,
+      [videogameId, genreId]
     );
   });
 }
 
-async function createManufacturer(name) {
-  await pool.query("INSERT INTO manufacturers (manufacturer) VALUES ($1)", [
-    name,
-  ]);
-}
-
-async function getAllCategories() {
-  const { rows } = await pool.query("SELECT * FROM categories");
-  return rows;
-}
-
-async function getAllManufacturers() {
-  const { rows } = await pool.query("SELECT * FROM manufacturers");
-  return rows;
-}
-
-async function getAllItems() {
-  const { rows } = await pool.query("SELECT * FROM  items");
-  return rows;
-}
-
-async function getItemFromId(itemId) {
-  const { rows } = await pool.query("SELECT * FROM items WHERE id = $1", [
-    itemId,
-  ]);
-  return rows[0];
-}
-
-async function getCategoryFromId(categoryId) {
-  const { rows } = await pool.query("SELECT * FROM categories WHERE id = $1", [
-    categoryId,
-  ]);
-  return rows[0];
-}
-
-async function getManufacturerFromId(manufacturerId) {
-  const { rows } = await pool.query(
-    "SELECT * FROM manufacturers WHERE id = $1",
-    [manufacturerId]
-  );
-  return rows[0];
-}
-
-async function getItemsInCategory(categoryId) {
-  const { rows } = await pool.query(
-    "SELECT * FROM item_categories JOIN items ON items.id = item_categories.item_id WHERE item_categories.category_id = $1",
-    [categoryId]
-  );
-  return rows;
-}
-
-async function getCategoriesForItem(itemId) {
-  const { rows } = await pool.query(
-    "SELECT * FROM item_categories JOIN categories ON categories.id = item_categories.category_id WHERE item_categories.item_id = $1",
-    [itemId]
-  );
-  return rows;
-}
-
-async function updateCategory({ id, name }) {
-  await pool.query("UPDATE categories SET category = $1 WHERE id = $2", [
-    name,
-    id,
-  ]);
-}
-
-async function updateItem({
-  id,
-  name,
-  description,
-  manufacturer,
-  price,
-  quantity,
-}) {
+async function createGenre({ genre }) {
   await pool.query(
-    "UPDATE items SET item = $1, description = $2, manufacturer_id = $3, price = $4, quantity = $5 WHERE id = $6",
-    [name, description, manufacturer, price, quantity, id]
+    `
+    INSERT INTO genre (genre)
+    VALUES
+      ($1);
+    `,
+    [genre]
   );
 }
 
-async function updateItemCategories(itemId, categoryIds) {
-  await pool.query("DELETE FROM item_categories WHERE item_id = $1", [itemId]);
-  categoryIds.forEach(async (categoryId) => {
+async function updateVideogame(
+  videogameId,
+  {
+    title,
+    description,
+    releaseDate,
+    quantity,
+    developerId,
+    publisherId,
+    genreIds,
+  }
+) {
+  await pool.query(
+    `
+    UPDATE videogame
+    SET
+      title = $1,
+      description = $2,
+      release_date = $3,
+      quantity = $4,
+      developer_id = $5,
+      publisher_id = $6
+    WHERE videogame_id = $7;
+    `,
+    [
+      title,
+      description,
+      releaseDate,
+      quantity,
+      developerId,
+      publisherId,
+      videogameId,
+    ]
+  );
+  await pool.query(
+    `
+    DELETE FROM videogame_genre
+    WHERE videogame_id = $1;
+    `,
+    [videogameId]
+  );
+  genreIds.forEach(async (genreId) => {
     await pool.query(
-      "INSERT INTO item_categories (item_id, category_id) VALUES ($1, $2)",
-      [itemId, categoryId]
+      `
+      INSERT INTO videogame_genre
+      VALUES
+        ($1, $2);
+      `,
+      [videogameId, genreId]
     );
   });
 }
 
-async function deleteCategory(categoryId) {
-  await pool.query("DELETE FROM item_categories WHERE category_id = $1", [
-    categoryId,
-  ]);
-  await pool.query("DELETE FROM categories WHERE id = $1", [categoryId]);
+async function updateGenre(genreId, { genre }) {
+  await pool.query(
+    `
+    UPDATE genre
+    SET
+      genre = $1
+    WHERE genre_id = $2;
+    `,
+    [genre, genreId]
+  );
 }
 
-async function deleteItem(itemId) {
-  await pool.query("DELETE FROM item_categories WHERE item_id = $1", [itemId]);
-  await pool.query("DELETE FROM items WHERE id = $1", [itemId]);
+async function deleteVideogame(videogameId) {
+  await pool.query(
+    `
+    DELETE FROM videogame
+    WHERE videogame.videogame_id = $1;
+    `,
+    [videogameId]
+  );
+}
+
+async function deleteGenre(genreId) {
+  await pool.query(
+    `
+    DELETE FROM genre
+    WHERE genre_id = $1;
+    `,
+    [genreId]
+  );
 }
 
 module.exports = {
-  createCategory,
-  createItem,
-  createManufacturer,
-  getAllCategories,
-  getAllManufacturers,
-  getAllItems,
-  getItemFromId,
-  getCategoryFromId,
-  getManufacturerFromId,
-  getItemsInCategory,
-  getCategoriesForItem,
-  updateCategory,
-  updateItem,
-  updateItemCategories,
-  deleteCategory,
-  deleteItem,
+  getAllVideogames,
+  getAllDevelopers,
+  getAllPublishers,
+  getAllGenres,
+  getVideogame,
+  getGenre,
+  getVideogameGenres,
+  getGenreVideogames,
+  createVideogame,
+  createGenre,
+  updateVideogame,
+  updateGenre,
+  deleteVideogame,
+  deleteGenre,
 };

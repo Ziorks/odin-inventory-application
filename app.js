@@ -1,29 +1,22 @@
-const express = require("express");
+require("dotenv").config();
 const path = require("path");
-const indexRouter = require("./routes/indexRouter");
-const categoriesRouter = require("./routes/categoriesRouter");
-const itemsRouter = require("./routes/itemsRouter");
-const manufacturersRouter = require("./routes/manufacturersRouter");
+const express = require("express");
+const videogamesRouter = require("./routes/videogamesRouter");
+const genresRouter = require("./routes/genresRouter");
+
 const app = express();
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
-app.use("/", indexRouter);
-app.use("/categories", categoriesRouter);
-app.use("/items", itemsRouter);
-app.use("/manufacturers", manufacturersRouter);
-
-app.get("*", (req, res) => {
-  res.status(404).render("404", { title: "Page Not Found" });
+app.get("/", (req, res) => {
+  res.render("index", { title: "Home" });
 });
-
-app.use((err, req, res, next) => {
-  res.status(500).send(err);
-});
+app.use("/videogames", videogamesRouter);
+app.use("/genres", genresRouter);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});

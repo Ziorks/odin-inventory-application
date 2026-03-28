@@ -1,68 +1,94 @@
+require("dotenv").config();
 const { Client } = require("pg");
 
 const SQL = `
-CREATE TABLE IF NOT EXISTS categories (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  category VARCHAR ( 255 ) NOT NULL
+CREATE TABLE IF NOT EXISTS developer (
+    developer_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    developer VARCHAR ( 255 ) NOT NULL
 );
 
-INSERT INTO categories (category)
-  VALUES ('Tents'),
-         ('Backpacks'),
-         ('Sleeping Pads');
-
-CREATE TABLE IF NOT EXISTS manufacturers (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  manufacturer VARCHAR ( 255 ) NOT NULL
+CREATE TABLE IF NOT EXISTS publisher (
+    publisher_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    publisher VARCHAR ( 255 ) NOT NULL
 );
 
-INSERT INTO manufacturers (manufacturer)
-  VALUES ('Nemo'),
-         ('Durston'),
-         ('Big Agnes'),
-         ('MSR'),
-         ('Osprey'),
-         ('Therm-a-Rest');
-
-CREATE TABLE IF NOT EXISTS items (
-  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  item VARCHAR ( 255 ) NOT NULL,
-  description TEXT NOT NULL,
-  manufacturer_id INTEGER REFERENCES manufacturers(id) NOT NULL,
-  price FLOAT NOT NULL,
-  quantity INTEGER NOT NULL
+CREATE TABLE IF NOT EXISTS genre (
+    genre_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    genre VARCHAR ( 255 ) NOT NULL
 );
 
-INSERT INTO items (item, description, manufacturer_id, price, quantity)
-  VALUES ('X-Mid 1P', '1 person trekking pole tent', 2, 296, 14),
-         ('Exos', '60 Liter Lightweight backpack', 5, 165, 6),
-         ('NeoAir XLite NXT', 'Ultra-light insulated sleeping pad', 6, 200, 8),
-         ('Tensor', 'Ultra-light insulated sleeping pad', 1, 180, 3);
-
-CREATE TABLE IF NOT EXISTS item_categories (
-  item_id INTEGER REFERENCES items(id),
-  category_id INTEGER REFERENCES categories(id),
-  CONSTRAINT item_categories_pkey PRIMARY KEY (item_id, category_id)
+CREATE TABLE IF NOT EXISTS videogame (
+    videogame_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    title VARCHAR ( 255 ) NOT NULL,
+    description TEXT NOT NULL,
+    release_date DATE NOT NULL,
+    quantity SMALLINT NOT NULL,
+    developer_id INTEGER REFERENCES developer (developer_id) ON UPDATE CASCADE,
+    publisher_id INTEGER REFERENCES publisher (publisher_id) ON UPDATE CASCADE
 );
 
-INSERT INTO item_categories (item_id, category_id)
-  VALUES (1, 1),
-         (2, 2),
-         (3, 3),
-         (4, 3);
+CREATE TABLE IF NOT EXISTS videogame_genre (
+    videogame_id INTEGER REFERENCES videogame (videogame_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    genre_id INTEGER REFERENCES genre (genre_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT videogame_genre_pkey PRIMARY KEY (videogame_id, genre_id)
+);
+
+INSERT INTO developer (developer)
+VALUES
+    ('Valve'),
+    ('Bungie'),
+    ('FromSoftware');
+
+INSERT INTO publisher (publisher)
+VALUES
+    ('Valve'),
+    ('Microsoft'),
+    ('Bandai Namco');
+
+INSERT INTO genre (genre)
+VALUES
+    ('FPS'),
+    ('Singleplayer'),
+    ('Multiplayer'),
+    ('Action'),
+    ('Sci-fi'),
+    ('RPG'),
+    ('Dark Fantasy');
+
+INSERT INTO videogame (title, description, release_date, quantity, developer_id, publisher_id)
+VALUES
+    ('Half-Life 2', 'City 17 or whatever.', 'Nov 16,2004', 9, 1, 1),
+    ('Halo 3', 'Finish the fight.', 'Sep 25, 2007', 5, 2, 2),
+    ('Dark Souls', 'Prepare to die.', 'Aug 24, 2012', 52, 3, 3);
+
+INSERT INTO videogame_genre (videogame_id, genre_id)
+VALUES
+    (1, 1),
+    (1, 2),
+    (1, 4),
+    (1, 5),
+    (2, 1),
+    (2, 3),
+    (2, 4),
+    (2, 5),
+    (3, 2),
+    (3, 4),
+    (3, 6),
+    (3, 7);
 `;
 
 async function main() {
   console.log("seeding...");
+
   const client = new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.CONNECTIONSTRING,
   });
+
   await client.connect();
   await client.query(SQL);
   await client.end();
+
   console.log("done");
 }
 
-if (process.env.POPULATE === "true") {
-  main();
-}
+main();

@@ -11,7 +11,14 @@
 <body>
   <%- include('partials/header.ejs') %>
   <h2><%= title %></h2>
-  <p>Welcome to the videogame inventory app! Begin by viewing all <a href="/videogames">videogames</a> or <a href="/genres">genres</a>.</p>
+  <%- include('partials/errors.ejs') %>
+  <form action="/genres/<%= genre.genre_id %>/update" method="post">
+    <div>
+      <label for="genre">Genre: </label>
+      <input type="text" name="genre" id="genre" value="<%= genre.genre %>" required>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
 </body>
 
 </html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <%- include('partials/header.ejs') %>
+  <h2><%= title %></h2>
+  <div class="toplink">
+    <a href="/videogames/<%= videogame.videogame_id %>/update">Edit</a>
+    <a href="/videogames/<%= videogame.videogame_id %>/delete">Delete</a>
+  </div>
+  <p>Quantity: <%= videogame.quantity %></p>
+  <p>Title: <%= videogame.title %></p>
+  <p>Description: <%= videogame.description %></p>
+  <p>Release Date: <%= videogame.release_date %></p>
+  <p>Developer: <a href="/developers/<%= videogame.developer_id %>"><%= videogame.developer %></a></p>
+  <p>Publisher: <a href="/publishers/<%= videogame.publisher_id %>"><%= videogame.publisher %></a></p>
+  <p>Genres: <% videogameGenres.forEach(genre=>{ %>
+    <a href="/genres/<%= genre.genre_id %>"><%= genre.genre %></a>
+    <% }) %>
+  </p>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title><%= title %></title>
+</head>
+
+<body>
+  <%- include('partials/header.ejs') %>
+  <h2><%= title %></h2>
+  <%- include('partials/errors.ejs') %>
+  <form action="/videogames/create" method="post">
+    <div>
+      <label for="quantity">Quantity: </label>
+      <input type="number" name="quantity" id="quantity" min="0" value="0" required>
+    </div>
+    <div>
+      <label for="title">Title: </label>
+      <input type="text" name="title" id="title" required>
+    </div>
+    <div>
+      <label for="description">Description: </label>
+      <textarea name="description" id="description" required></textarea>
+    </div>
+    <div>
+      <label for="releaseDate">Release Date: </label>
+      <input type="text" name="releaseDate" id="releaseDate" required>
+    </div>
+    <div>
+      <label for="developerId">Developer: </label>
+      <select name="developerId" id="developerId" required>
+        <option hidden disabled selected>-- select an option --</option>
+        <% developers.forEach(developer=>{ %>
+        <option value="<%= developer.developer_id %>"><%= developer.developer %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div>
+      <label for="publisherId">Publisher: </label>
+      <select name="publisherId" id="publisherId" required>
+        <option hidden disabled selected>-- select an option --</option>
+        <% publishers.forEach(publisher=>{ %>
+        <option value="<%= publisher.publisher_id %>"><%= publisher.publisher %></option>
+        <% }) %>
+      </select>
+    </div>
+    <fieldset>
+      <legend>Genres</legend>
+      <% genres.forEach(genre=>{ %>
+      <div>
+        <label for="genre_<%= genre.genre_id %>"><%= genre.genre %></label>
+        <input type="checkbox" name="genre_<%= genre.genre_id %>" id="genre_<%= genre.genre_id %>">
+      </div>
+      <% }) %>
+    </fieldset>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+
+</html>

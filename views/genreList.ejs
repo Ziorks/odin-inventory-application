@@ -11,7 +11,16 @@
 <body>
   <%- include('partials/header.ejs') %>
   <h2><%= title %></h2>
-  <p>Welcome to the videogame inventory app! Begin by viewing all <a href="/videogames">videogames</a> or <a href="/genres">genres</a>.</p>
+  <a href="/genres/create" class="toplink">Create a new genre</a>
+  <% if (genres.length > 0) { %>
+  <ul>
+    <% genres.forEach(genre=>{ %>
+    <li><a href="/genres/<%= genre.genre_id %>"><%= genre.genre %></a></li>
+    <% }) %>
+  </ul>
+  <% } else { %>
+  <p>There are no genres.</p>
+  <% } %>
 </body>
 
 </html>
